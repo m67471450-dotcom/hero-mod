@@ -1,0 +1,16 @@
+{  
+  "HERO-HERO.aromaPrinciple": "Lore",
+  "HERO-HERO.banter.alive.endTurnPing": "Co-op hurry up end turn ping message",
+  "HERO-HERO.banter.dead.endTurnPing": "...",
+  "HERO-HERO.cardsModifierDescription": "__ cards will now appear in rewards and shops.",
+  "HERO-HERO.cardsModifierTitle": "__ Cards",
+  "HERO-HERO.description": "Character Selection\nScreen Description",
+  "HERO-HERO.eventDeathPrevention": "Co-op survival line",
+  "HERO-HERO.goldMonologue": "Line spoken when obtaining a large amount of gold",
+  "HERO-HERO.possessiveAdjective": "his",
+  "HERO-HERO.pronounObject": "him",
+  "HERO-HERO.pronounPossessive": "his",
+  "HERO-HERO.pronounSubject": "he",
+  "HERO-HERO.title": "The Hero",
+  "HERO-HERO.titleObject": "The Hero"
+}
