@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Relics;
+using CardShuriken = Hero.HeroCode.Cards.Shuriken;
 
 namespace Hero.HeroCode.Character;
 
@@ -27,9 +28,11 @@ public class Hero : PlaceholderCharacterModel
     [
         ModelDb.Card<HeroStrike>(),
         ModelDb.Card<HeroStrike>(),
+        ModelDb.Card<CardShuriken>(),
         ModelDb.Card<HeroStrike>(),
-        ModelDb.Card<HeroStrike>(),
-        ModelDb.Card<HeroStrike>()
+        ModelDb.Card<HeroDefend>(),
+        ModelDb.Card<ShieldOverload>(),
+        ModelDb.Card<PiercingStrike>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>

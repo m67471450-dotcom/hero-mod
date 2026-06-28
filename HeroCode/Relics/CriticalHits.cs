@@ -1,49 +1,30 @@
-﻿using Hero.HeroCode.Relics;
+﻿using Hero.HeroCode.Powers;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.ValueProps;
+using HarmonyLib;
 
 namespace Hero.HeroCode.Relics;
 
 public class CriticalHits() : HeroRelic
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
-    private HashSet<CardModel> _criticalCards = [];
+}
 
-    public Boolean HasCritThisTurn()
+[HarmonyPatch(typeof(Hook), nameof(Hook.AfterPlayerTurnStart))]
+public static class CriticalHitsTurnStartPatch
+{
+    public static void Postfix(CombatState combatState, PlayerChoiceContext choiceContext, Player player)
     {
-        return _criticalCards.Count > 0;
-    }
-
-    public void ClearTurnCrits()
-    {
-        _criticalCards.Clear();
-    }
-
-    public override Decimal ModifyDamageMultiplicative(
-        Creature? target,
-        Decimal amount,
-        ValueProp props,
-        Creature? dealer,
-        CardModel? cardSource)
-    {
-        if (!props.IsPoweredAttack())
-            return 1M;
-
-        if (dealer != this.Owner.Creature)
-            return 1M;
-
-        if (cardSource == null)
-            return 1M;
-
-        if (Random.Shared.Next(8) == 0)
+        var creature = player.Creature;
+        if (!creature.Powers.OfType<CritManagerPower>().Any())
         {
-            _criticalCards.Add(cardSource);
-            return 1.5M;
+            PowerCmd.Apply<CritManagerPower>(choiceContext, creature, 1M, creature, null);
         }
-
-        return 1M;
     }
 }
