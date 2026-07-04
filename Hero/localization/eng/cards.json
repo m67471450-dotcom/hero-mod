@@ -1,12 +1,14 @@
 {
-  "HERO-HERO_STRIKE.description": "deal 6",
+  "HERO-HERO_STRIKE.description": "",
   "HERO-HERO_STRIKE.title": "HeroStrike",
-  "HERO-HERO_DEFEND.description": "gain 5 block",
+  "HERO-HERO_DEFEND.description": "",
   "HERO-HERO_DEFEND.title": "HeroDefend",
-  "HERO-SHURIKEN.description": "deal 2 damage 3 times",
+  "HERO-SHURIKEN.description": "",
   "HERO-SHURIKEN.title": "Shuriken",
-  "HERO-SHIELD_OVERLOAD.description": "gain 4 block twice",
+  "HERO-SHIELD_OVERLOAD.description": "",
   "HERO-SHIELD_OVERLOAD.title": "Shield Overload",
-  "HERO-PIERCING_STRIKE.description": "deal 8 damage, always crits",
-  "HERO-PIERCING_STRIKE.title": "Piercing Strike"
+  "HERO-PIERCING_STRIKE.description": "",
+  "HERO-PIERCING_STRIKE.title": "Piercing Strike",
+  "HERO-FIRST_STRIKE.description": "",
+  "HERO-FIRST_STRIKE.title": "First Strike"
 }

@@ -1,7 +1,5 @@
-using Hero.HeroCode.Cards;
 using Hero.HeroCode.Powers;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -11,11 +9,11 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace Hero.HeroCode.Cards;
 
-public class PiercingStrike() : HeroCard(
+public class FirstStrike() : HeroCard(
     2,
-    CardType.Attack,
+    CardType.Power,
     CardRarity.Uncommon,
-    TargetType.AnyEnemy)
+    TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars
     {
@@ -23,7 +21,7 @@ public class PiercingStrike() : HeroCard(
         {
             return new DynamicVar[]
             {
-                new DamageVar(8M, ValueProp.Move)
+                new PowerVar<FirstStrikePower>(1M)
             };
         }
     }
@@ -36,14 +34,13 @@ public class PiercingStrike() : HeroCard(
         {
             await PowerCmd.Apply<CritManagerPower>(choiceContext, Owner.Creature, 1M, Owner.Creature, this);
         }
+
+        await PowerCmd.Apply<FirstStrikePower>(choiceContext, Owner.Creature, DynamicVars["FirstStrikePower"].BaseValue, Owner.Creature, this);
+
         Owner.Creature.Powers.OfType<CritManagerPower>().FirstOrDefault()?.AddGuaranteedCrit(1);
+    }
 
-        ArgumentNullException.ThrowIfNull(cardPlay.Target);
-
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
-            .Targeting(cardPlay.Target)
-            .WithHitFx("vfx/vfx_attack_slash")
-            .Execute(choiceContext);
+    protected override void OnUpgrade()
+    {
     }
 }

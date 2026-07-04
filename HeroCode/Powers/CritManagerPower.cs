@@ -21,10 +21,10 @@ public class CritManagerPower() : HeroPower
     public override PowerStackType StackType => PowerStackType.Single;
 
     private const int RandomCritDenominator = 8;
-    private Decimal _critMultiplier = 1.5M;
+    private decimal _critMultiplier = 1.5M;
     private int _remainingGuaranteedCrits = 1;
 
-    public Decimal CritMultiplier
+    public decimal CritMultiplier
     {
         get => _critMultiplier;
         set => _critMultiplier = value;
@@ -46,8 +46,8 @@ public class CritManagerPower() : HeroPower
         _remainingGuaranteedCrits = 1;
     }
 
-    public void SetCritMultiplier(Decimal multiplier) => _critMultiplier = multiplier;
-    public void ModifyCritMultiplier(Decimal delta) => _critMultiplier += delta;
+    public void SetCritMultiplier(decimal multiplier) => _critMultiplier = multiplier;
+    public void ModifyCritMultiplier(decimal delta) => _critMultiplier += delta;
     public void AddGuaranteedCrit(int count = 1) => _remainingGuaranteedCrits += count;
 
     private bool ConsumeGuaranteedCrit()
@@ -60,15 +60,13 @@ public class CritManagerPower() : HeroPower
         return false;
     }
 
-    public override Decimal ModifyDamageMultiplicative(
-        Creature? target,
-        Decimal amount,
-        ValueProp props,
-        Creature? dealer,
-        CardModel? cardSource)
+    public bool TryApplyCrit(ValueProp props, CardModel? cardSource)
     {
-        if (!props.IsPoweredAttack() || cardSource == null || cardSource.Owner.Creature != this.Owner)
-            return 1M;
+        if (cardSource == null || cardSource.Owner.Creature != this.Owner)
+            return false;
+
+        if (!props.IsPoweredAttack())
+            return false;
 
         AttacksThisTurn++;
 
@@ -77,16 +75,36 @@ public class CritManagerPower() : HeroPower
         if (isCrit)
         {
             CritsThisTurn++;
-            return _critMultiplier;
+            return true;
         }
 
         if (Random.Shared.Next(RandomCritDenominator) == 0)
         {
             CritsThisTurn++;
-            return _critMultiplier;
+            return true;
         }
 
-        return 1M;
+        return false;
+    }
+}
+
+[HarmonyPatch(typeof(Hook), nameof(Hook.ModifyDamage))]
+public static class CritManagerDamagePatch
+{
+    public static void Postfix(
+        Creature? dealer,
+        ValueProp props,
+        CardModel? cardSource,
+        ref decimal __result)
+    {
+        if (dealer == null || cardSource == null)
+            return;
+
+        var power = dealer.Powers.OfType<CritManagerPower>().FirstOrDefault();
+        if (power == null || !power.TryApplyCrit(props, cardSource))
+            return;
+
+        __result *= power.CritMultiplier;
     }
 }
 
